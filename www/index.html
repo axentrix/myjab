@@ -19,38 +19,121 @@
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
+    <script>
+        // change the default namespace for the CreateJS libraries:
+        var createjs_loading = createjs_loading||{};
+        var createjs = createjs_loading;
+    </script>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/loading.js"></script>
+
     <script src="views/events/events.js"></script>
     <script src="views/food/food.js"></script>
     <script src="views/home/home.js"></script>
     <script src="views/reservation/reservation.js"></script>
     <script src="views/tour/tour.js"></script>
     <script src="views/weather/weather.js"></script>
+
+
+    <script>
+        var canvas, stage, exportRoot;
+
+        function init_loading() {
+            canvas = document.getElementById("canvas_loading");
+            anim_container = document.getElementById("animation_container");
+            dom_overlay_container = document.getElementById("dom_overlay_container");
+            var comp=AdobeAn.getComposition("5313BB02FE58964B972872E881720BCB");
+            var libloading=comp.getLibrary();
+
+            handleComplete({},comp);
+
+
+        }
+
+        function handleComplete(evt,comp) {
+            //This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+            var libloading=comp.getLibrary();
+            var ss=comp.getSpriteSheet();
+            exportRoot = new libloading.loading();
+            stage = new libloading.Stage(canvas);
+            //Registers the "tick" event listener.
+            fnStartAnimation = function() {
+                stage.addChild(exportRoot);
+                createjs_loading.Ticker.setFPS(libloading.properties.fps);
+                createjs_loading.Ticker.addEventListener("tick", stage);
+            }
+            //Code to support hidpi screens and responsive scaling.
+            function makeResponsive(isResp, respDim, isScale, scaleType) {
+                var lastW, lastH, lastS=1;
+                window.addEventListener('resize', resizeCanvas);
+                resizeCanvas();
+                function resizeCanvas() {
+                    var w = libloading.properties.width, h = libloading.properties.height;
+                    var iw = window.innerWidth, ih=window.innerHeight;
+                    var pRatio = window.devicePixelRatio || 1, xRatio=iw/w, yRatio=ih/h, sRatio=1;
+                    if(isResp) {
+                        if((respDim=='width'&&lastW==iw) || (respDim=='height'&&lastH==ih)) {
+                            sRatio = lastS;
+                        }
+                        else if(!isScale) {
+                            if(iw<w || ih<h)
+                                sRatio = Math.min(xRatio, yRatio);
+                        }
+                        else if(scaleType==1) {
+                            sRatio = Math.min(xRatio, yRatio);
+                        }
+                        else if(scaleType==2) {
+                            sRatio = Math.max(xRatio, yRatio);
+                        }
+                    }
+                    canvas.width = w*pRatio*sRatio;
+                    canvas.height = h*pRatio*sRatio;
+                    canvas.style.width = dom_overlay_container.style.width = anim_container.style.width =  w*sRatio+'px';
+                    canvas.style.height = anim_container.style.height = dom_overlay_container.style.height = h*sRatio+'px';
+                    stage.scaleX = pRatio*sRatio;
+                    stage.scaleY = pRatio*sRatio;
+                    lastW = iw; lastH = ih; lastS = sRatio;
+                    stage.tickOnUpdate = false;
+                    stage.update();
+                    stage.tickOnUpdate = true;
+                }
+            }
+            makeResponsive(false,'both',false,1);
+            AdobeAn.compositionLoaded(libloading.properties.id);
+            fnStartAnimation();
+        }
+    </script>
+
+
   </head>
-  <body ng-app="App">
+  <body ng-app="App" onload="init_loading();">
 
     <ion-side-menus>
       <ion-side-menu-content>
         <ion-nav-bar class="bar-positive nav-title-slide-ios7">
-          <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+          <button menu-toggle="left" class="button button-icon icon icon-menu"></button>
         </ion-nav-bar>
         <ion-nav-view></ion-nav-view>
       </ion-side-menu-content>
 
       <ion-side-menu side="left">
-        <ion-header-bar class="bar-dark">
-          <h1 class="title">Sunshine Resort</h1>
+        <ion-header-bar class="bar-jab">
+          <h1 class="title"><img src="img/logo_menu.svg" alt=""/></h1>
         </ion-header-bar>
-        <ion-content has-header="true">
+        <ion-content has-header="false">
           <ion-list>
-            <ion-item href="#/" class="item-icon-left" menu-close><i class="icon ion-home"></i> Home</ion-item>
-            <ion-item href="#/reservation" class="item-icon-left" menu-close><i class="icon ion-folder"></i> Reservation</ion-item>
-            <ion-item href="tel:8005555555" class="item-icon-left" menu-close><i class="icon ion-ios7-telephone"></i> Call Concierge</ion-item>
-            <ion-item href="#/weather" class="item-icon-left" menu-close><i class="icon ion-ios7-partlysunny"></i> Weather</ion-item>
-            <ion-item href="#/events" class="item-icon-left" menu-close><i class="icon ion-calendar"></i> Events</ion-item>
-            <ion-item href="#/local/food" class="item-icon-left" menu-close> <i class="icon ion-location"></i> Local Places</ion-item>
-            <ion-item href="#/food" class="item-icon-left" menu-close> <i class="icon ion-fork"></i> Order Room Service</ion-item>
-            <ion-item href="#/about" class="item-icon-left" menu-close> <i class="icon ion-ios7-information"></i> About</ion-item>
+            <ion-item href="#/" class="item-icon-left" menu-close><i class="icon icon-swipe"></i> Swipey Screen</ion-item>
+            <ion-item href="#/reservation" class="item-icon-left" menu-close><i class="icon icon-comments_likes"></i>Chats and Likes</ion-item>
+            <ion-item href="tel:8005555555" class="item-icon-left" menu-close><i class="icon icon-profile"></i> My Profile</ion-item>
+            <ion-item href="#/weather" class="item-icon-left" menu-close><i class="icon icon-donorpro"></i> Donor Connect</ion-item>
+            <ion-item href="#/events" class="item-icon-left" menu-close><i class="icon icon-opendoor"></i>Open Door Policy</ion-item>
+            <ion-item href="#/local/food" class="item-icon-left" menu-close> <i class="icon icon-settings"></i>Settings</ion-item>
+            <ion-item href="#/food" class="item-icon-left" menu-close> <i class="icon icon-inviteearn"></i> Invite and Earn</ion-item>
+            <ion-item href="#/about" class="item-icon-left" menu-close> <i class="icon icon-rewards"></i> JAB Rewards</ion-item>
+             <ion-item href="#/about" class="item-icon-left" menu-close> <i class="icon icon-morepeople"></i> Get More People</ion-item>
+              <ion-item href="#/about" class="item-icon-left" menu-close> <i class="icon icon-gethelp"></i> Get Help & Suggest Stuff</ion-item>
+            
           </ion-list>
         </ion-content>
       </ion-side-menu>

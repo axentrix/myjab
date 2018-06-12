@@ -1,22 +1,33 @@
-<ion-view title="Welcome" class="tour">
+<ion-view title="Welcome" class="welcome">
+
+    <div class="elements"> <div class="rainbow"></div>
+     <div class="stardust"></div></div>
   <ion-nav-buttons side="left">
   </ion-nav-buttons>
   <ion-slide-box>
     <ion-slide>
-      <img src="img/logo.jpg" />
-      <h2>Welcome to<br />Sunshine Resort</h2>
+
+    <div class="topbox">
+      <div id="animation_container" style="background-color:transparent; width:150px; height:150px">
+        <canvas id="canvas_loading" width="150" height="150" style="position: absolute; display: block; background-color:rgba(transparent);"></canvas>
+        <div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:150px; height:150px; position: absolute; left: 0px; top: 0px; display: block;">
+        </div>
+      </div>
+      <img src="img/icons/wordmark.svg" />
+ 
+      </div>
+
+
+
+    
+
     </ion-slide>
     <ion-slide>
-      <h3>View your reservation</h3>
-      <h3>Call the concierge</h3>
-      <h3>Order room service</h3>
-      <h3>Discover resort events</h3>
-      <h3>Find local places</h3>
-      <h3>and much more!</h3>
+     
     </ion-slide>
     <ion-slide>
       <img src="img/logo.jpg" />
-      <button class="button button-full button-positive" ng-click="login()">Get Started</button>
+      <button class="btn btn-secondary" ng-click="login()">Get Started</button>
     </ion-slide>
   </ion-slide-box>
 </ion-view>
